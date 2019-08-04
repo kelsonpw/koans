@@ -2,7 +2,7 @@
 # -*- ruby -*-
 
 begin
-  require 'win32console'
+  require "win32console"
 rescue LoadError
 end
 
@@ -15,8 +15,8 @@ end
 
 def ruby_version?(version)
   RUBY_VERSION =~ /^#{version}/ ||
-    (version == 'jruby' && defined?(JRUBY_VERSION)) ||
-    (version == 'mri' && ! defined?(JRUBY_VERSION))
+    (version == "jruby" && defined?(JRUBY_VERSION)) ||
+    (version == "mri" && !defined?(JRUBY_VERSION))
 end
 
 def in_ruby_version(*versions)
@@ -30,7 +30,7 @@ end
 
 # Standard, generic replacement value.
 # If value19 is given, it is used in place of value for Ruby 1.9.
-def __(value="FILL ME IN", value19=:mu)
+def __(value = "FILL ME IN FOOL", value19 = :mu)
   if RUBY_VERSION < "1.9"
     value
   else
@@ -39,7 +39,7 @@ def __(value="FILL ME IN", value19=:mu)
 end
 
 # Numeric replacement value.
-def _n_(value=999999, value19=:mu)
+def _n_(value = 999999, value19 = :mu)
   if RUBY_VERSION < "1.9"
     value
   else
@@ -48,7 +48,7 @@ def _n_(value=999999, value19=:mu)
 end
 
 # Error object replacement value.
-def ___(value=FillMeInError, value19=:mu)
+def ___(value = FillMeInError, value19 = :mu)
   if RUBY_VERSION < "1.9"
     value
   else
@@ -58,7 +58,7 @@ end
 
 # Method name replacement.
 class Object
-  def ____(method=nil)
+  def ____(method = nil)
     if method
       self.send(method)
     end
@@ -76,8 +76,8 @@ class String
       self
     else
       left_padding = extra / 2
-      right_padding = (extra+1)/2
-      (" " * left_padding) + self + (" " *right_padding)
+      right_padding = (extra + 1) / 2
+      (" " * left_padding) + self + (" " * right_padding)
     end
   end
 end
@@ -85,16 +85,16 @@ end
 module Neo
   class << self
     def simple_output
-      ENV['SIMPLE_KOAN_OUTPUT'] == 'true'
+      ENV["SIMPLE_KOAN_OUTPUT"] == "true"
     end
   end
 
   module Color
     #shamelessly stolen (and modified) from redgreen
     COLORS = {
-      :clear   => 0,  :black   => 30, :red   => 31,
-      :green   => 32, :yellow  => 33, :blue  => 34,
-      :magenta => 35, :cyan    => 36,
+      :clear => 0, :black => 30, :red => 31,
+      :green => 32, :yellow => 33, :blue => 34,
+      :magenta => 35, :cyan => 36,
     }
 
     module_function
@@ -117,15 +117,15 @@ module Neo
     end
 
     def use_colors?
-      return false if ENV['NO_COLOR']
-      if ENV['ANSI_COLOR'].nil?
+      return false if ENV["NO_COLOR"]
+      if ENV["ANSI_COLOR"].nil?
         if using_windows?
           using_win32console
         else
           return true
         end
       else
-        ENV['ANSI_COLOR'] =~ /^(t|y)/i
+        ENV["ANSI_COLOR"] =~ /^(t|y)/i
       end
     end
 
@@ -145,33 +145,33 @@ module Neo
       raise FailedAssertionError, msg
     end
 
-    def assert(condition, msg=nil)
+    def assert(condition, msg = nil)
       msg ||= "Failed assertion."
       flunk(msg) unless condition
       true
     end
 
-    def assert_equal(expected, actual, msg=nil)
+    def assert_equal(expected, actual, msg = nil)
       msg ||= "Expected #{expected.inspect} to equal #{actual.inspect}"
       assert(expected == actual, msg)
     end
 
-    def assert_not_equal(expected, actual, msg=nil)
+    def assert_not_equal(expected, actual, msg = nil)
       msg ||= "Expected #{expected.inspect} to not equal #{actual.inspect}"
       assert(expected != actual, msg)
     end
 
-    def assert_nil(actual, msg=nil)
+    def assert_nil(actual, msg = nil)
       msg ||= "Expected #{actual.inspect} to be nil"
       assert(nil == actual, msg)
     end
 
-    def assert_not_nil(actual, msg=nil)
+    def assert_not_nil(actual, msg = nil)
       msg ||= "Expected #{actual.inspect} to not be nil"
       assert(nil != actual, msg)
     end
 
-    def assert_match(pattern, actual, msg=nil)
+    def assert_match(pattern, actual, msg = nil)
       msg ||= "Expected #{actual.inspect} to match #{pattern.inspect}"
       assert pattern =~ actual, msg
     end
@@ -208,21 +208,21 @@ module Neo
       @observations = []
     end
 
-    PROGRESS_FILE_NAME = '.path_progress'
+    PROGRESS_FILE_NAME = ".path_progress"
 
     def add_progress(prog)
       @_contents = nil
       exists = File.exists?(PROGRESS_FILE_NAME)
-      File.open(PROGRESS_FILE_NAME,'a+') do |f|
-        f.print "#{',' if exists}#{prog}"
+      File.open(PROGRESS_FILE_NAME, "a+") do |f|
+        f.print "#{"," if exists}#{prog}"
       end
     end
 
     def progress
       if @_contents.nil?
         if File.exists?(PROGRESS_FILE_NAME)
-          File.open(PROGRESS_FILE_NAME,'r') do |f|
-            @_contents = f.read.to_s.gsub(/\s/,'').split(',')
+          File.open(PROGRESS_FILE_NAME, "r") do |f|
+            @_contents = f.read.to_s.gsub(/\s/, "").split(",")
           end
         else
           @_contents = []
@@ -247,7 +247,7 @@ module Neo
     end
 
     def failed?
-      ! @failure.nil?
+      !@failure.nil?
     end
 
     def assert_failed?
@@ -256,7 +256,7 @@ module Neo
 
     def instruct
       if failed?
-        @observations.each{|c| puts c }
+        @observations.each { |c| puts c }
         encourage
         guide_through_error
         a_zenlike_statement
@@ -269,16 +269,16 @@ module Neo
     def show_progress
       bar_width = 50
       total_tests = Neo::Koan.total_tests
-      scale = bar_width.to_f/total_tests
+      scale = bar_width.to_f / total_tests
       print Color.green("your path thus far [")
-      happy_steps = (pass_count*scale).to_i
+      happy_steps = (pass_count * scale).to_i
       happy_steps = 1 if happy_steps == 0 && pass_count > 0
-      print Color.green('.'*happy_steps)
+      print Color.green("." * happy_steps)
       if failed?
-        print Color.red('X')
-        print Color.cyan('_'*(bar_width-1-happy_steps))
+        print Color.red("X")
+        print Color.cyan("_" * (bar_width - 1 - happy_steps))
       end
-      print Color.green(']')
+      print Color.green("]")
       print " #{pass_count}/#{total_tests}"
       puts
     end
@@ -297,9 +297,9 @@ module Neo
 
     def artistic_end_screen
       "JRuby 1.9.x Koans"
-      ruby_version = "(in #{'J' if defined?(JRUBY_VERSION)}Ruby #{defined?(JRUBY_VERSION) ? JRUBY_VERSION : RUBY_VERSION})"
+      ruby_version = "(in #{"J" if defined?(JRUBY_VERSION)}Ruby #{defined?(JRUBY_VERSION) ? JRUBY_VERSION : RUBY_VERSION})"
       ruby_version = ruby_version.side_padding(54)
-        completed = <<-ENDTEXT
+      completed = <<-ENDTEXT
                                   ,,   ,  ,,
                                 :      ::::,    :::,
                    ,        ,,: :::::::::::::,,  ::::   :  ,
@@ -316,7 +316,7 @@ module Neo
  :::::::::::,                                                     ,::::::::::::
 :::::::::::::                                                     ,::::::::::::
 ::::::::::::                      Ruby Koans                       ::::::::::::
-::::::::::::#{                  ruby_version                     },::::::::::::
+::::::::::::#{ruby_version},::::::::::::
 :::::::::::,                                                      , :::::::::::
 ,:::::::::::::,                brought to you by                 ,,::::::::::::
 ::::::::::::::                                                    ,::::::::::::
@@ -334,7 +334,7 @@ module Neo
                       ,::::                         , ,,
                                                   ,,,
 ENDTEXT
-        puts completed
+      puts completed
     end
 
     def encourage
@@ -374,7 +374,7 @@ ENDTEXT
 
     def indent(text)
       text = text.split(/\n/) if text.is_a?(String)
-      text.collect{|t| "  #{t}"}
+      text.collect { |t| "  #{t}" }
     end
 
     def find_interesting_lines(backtrace)
@@ -387,22 +387,22 @@ ENDTEXT
     # metakoans Ruby Quiz (http://rubyquiz.com/quiz67.html)
     def a_zenlike_statement
       if !failed?
-        zen_statement =  "Mountains are again merely mountains"
+        zen_statement = "Mountains are again merely mountains"
       else
         zen_statement = case (@pass_count % 10)
-        when 0
-          "mountains are merely mountains"
-        when 1, 2
-          "learn the rules so you know how to break them properly"
-        when 3, 4
-          "remember that silence is sometimes the best answer"
-        when 5, 6
-          "sleep is the best meditation"
-        when 7, 8
-          "when you lose, don't lose the lesson"
-        else
-          "things are not what they appear to be: nor are they otherwise"
-        end
+                        when 0
+                          "mountains are merely mountains"
+                        when 1, 2
+                          "learn the rules so you know how to break them properly"
+                        when 3, 4
+                          "remember that silence is sometimes the best answer"
+                        when 5, 6
+                          "sleep is the best meditation"
+                        when 7, 8
+                          "when you lose, don't lose the lesson"
+                        else
+                          "things are not what they appear to be: nor are they otherwise"
+                        end
       end
       puts Color.green(zen_statement)
     end
@@ -413,7 +413,7 @@ ENDTEXT
 
     attr_reader :name, :failure, :koan_count, :step_count, :koan_file
 
-    def initialize(name, koan_file=nil, koan_count=0, step_count=0)
+    def initialize(name, koan_file = nil, koan_count = 0, step_count = 0)
       @name = name
       @failure = nil
       @koan_count = koan_count
@@ -487,7 +487,7 @@ ENDTEXT
         @subclasses ||= []
       end
 
-       # Lazy initialize list of test methods.
+      # Lazy initialize list of test methods.
       def testmethods
         @test_methods ||= []
       end
@@ -501,7 +501,7 @@ ENDTEXT
       end
 
       def total_tests
-        self.subclasses.inject(0){|total, k| total + k.testmethods.size }
+        self.subclasses.inject(0) { |total, k| total + k.testmethods.size }
       end
     end
   end
@@ -518,9 +518,9 @@ ENDTEXT
     def each_step
       catch(:neo_exit) {
         step_count = 0
-        Neo::Koan.subclasses.each_with_index do |koan,koan_index|
+        Neo::Koan.subclasses.each_with_index do |koan, koan_index|
           koan.testmethods.each do |method_name|
-            step = koan.new(method_name, koan.to_s, koan_index+1, step_count+=1)
+            step = koan.new(method_name, koan.to_s, koan_index + 1, step_count += 1)
             yield step
           end
         end
