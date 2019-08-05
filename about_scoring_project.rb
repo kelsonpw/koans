@@ -30,13 +30,16 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 # Your goal is to write the score method.
 
 def score(dice)
-  points = 0
-  points += 1000 * (dice.count(1) / 3)
-  points += 100 * (dice.count(1) % 3)
-  points += 50 * (dice.count(5) % 3)
-
-  (2..6).inject(points) do |sum, n| 
-    sum += (100 * n) * (dice.count(n) / 3)
+  (1..6).inject(0) do |sum, n| 
+    if n == 1
+      sum += (1000 * (dice.count(n) / 3))
+      sum += (100 * (dice.count(n) % 3))
+    else
+      if (n === 5) 
+        sum += 50 * (dice.count(n) % 3)
+      end
+      sum += (100 * n) * (dice.count(n) / 3)
+    end
   end
 end
 
